@@ -2,4 +2,4 @@ __pycache__
 .env
 ai/network
 .vscode
-backend/data/*
+backend/data/*.csv
