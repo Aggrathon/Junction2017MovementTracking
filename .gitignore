@@ -4,3 +4,4 @@ ai/network
 .vscode
 backend/data/*
 .sass-cache/
+backend/data/*.csv
