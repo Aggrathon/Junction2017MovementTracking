@@ -3,3 +3,4 @@ __pycache__
 ai/network
 .vscode
 backend/data/*
+.sass-cache/
