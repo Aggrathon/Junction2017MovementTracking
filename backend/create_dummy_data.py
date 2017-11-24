@@ -4,9 +4,9 @@ import random
 
 def generate_random_walk_data(n_rows=1000):
     values = [0 for _ in xrange(n_rows)]
-    values[0] = random.uniform(-10, 10)
+    values[0] = round(random.uniform(-10, 10), 2)
     for i in range(1, n_rows):
-        values[i] = values[i - 1] + random.uniform(-1, 1)
+        values[i] = round(values[i - 1] + random.uniform(-1, 1), 2)
     return values
 
 
