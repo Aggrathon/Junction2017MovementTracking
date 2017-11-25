@@ -1,6 +1,7 @@
 __pycache__
 .env
 ai/network
+ai/network2
 .vscode
 .sass-cache/
 backend/data/*.csv
