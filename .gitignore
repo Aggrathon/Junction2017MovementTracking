@@ -2,3 +2,6 @@ __pycache__
 .env
 ai/network
 .vscode
+.sass-cache/
+backend/data/*.csv
+*.pyc
