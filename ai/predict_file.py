@@ -27,9 +27,9 @@ def predict():
         data = tf.data.Dataset.from_generator(input_gen, (tf.float32, tf.float32))
         batch = data.make_one_shot_iterator().get_next()
         return {"data": batch[0]}, None
-    key = ['walking straight', 'turning left', 'turning right']
+    key = ['straight', 'left', 'right']
     for res in nn.predict(input):
-        print("PREDICTION:", key[res['output']])
+        print("PREDICTION:  ", '\t'.join('%s: %.0f%%'%(k,r*100.0) for k, r in zip(key, res['output'])))
 
 if __name__ == "__main__":
     if len(sys.argv) == 2:
