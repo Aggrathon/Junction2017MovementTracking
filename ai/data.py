@@ -22,7 +22,7 @@ def get_data():
             label[0] = 1
         else:
             continue
-        time, data = read_file(file)
+        time, data = read_file('data/'+file)
         smooth = data_smooth(data)
         start = get_next_step(smooth, 0)
         stop = get_next_step(smooth, start)
@@ -52,6 +52,7 @@ def read_file(filename):
     """
         Read a csv
     """
+    print('Reading: '+filename)
     time = []
     data = []
     with open(filename) as file:
