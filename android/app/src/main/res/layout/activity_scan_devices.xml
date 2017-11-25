@@ -4,17 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.infa.suuntoapp.MainActivity">
+    tools:context="com.example.infa.suuntoapp.ScanDevicesActivity">
 
-    <Button
-        android:id="@+id/goScanView"
+    <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="49dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:onClick="goToScanView"
-        android:text="Scan"
+        android:layout_marginTop="16dp"
+        android:text="Scan Devices"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
