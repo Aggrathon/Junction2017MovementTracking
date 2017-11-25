@@ -34,9 +34,35 @@ def model_fn(features, labels, mode):
             predictions={'output': tf.nn.softmax(output)}
         )
 
+def model2_fn(features, labels, mode):
+    prev_layer = features['data']
+    prev_layer = tf.reshape(prev_layer, [BATCH, -1])
+    dropout = 0.7 if tf.estimator.ModeKeys.TRAIN else 1.0
+    for i in [1024, 512, 128, 32]:
+        prev_layer = tf.layers.dense(prev_layer, i, activation=tf.nn.relu)
+        prev_layer = tf.layers.dropout(prev_layer, dropout)
+    output = tf.layers.dense(prev_layer, PREDS, activation=None, name="logits")
+    if mode != tf.estimator.ModeKeys.PREDICT:
+        with tf.variable_scope("loss"):
+            loss = tf.losses.softmax_cross_entropy(labels['pred'], output)
+            train = tf.train.AdamOptimizer().minimize(loss, tf.train.get_global_step())
+        return tf.estimator.EstimatorSpec(
+                mode=mode,
+                predictions={'output': tf.nn.softmax(output)},
+                loss=loss,
+                train_op=train
+        )
+    else:
+        return tf.estimator.EstimatorSpec(
+            mode=mode,
+            predictions={'output': tf.nn.softmax(output)}
+        )
 
 def network():
     return tf.estimator.Estimator(model_fn, 'network')
+
+def network2():
+    return tf.estimator.Estimator(model2_fn, 'network2')
     
 
 if __name__ == "__main__":

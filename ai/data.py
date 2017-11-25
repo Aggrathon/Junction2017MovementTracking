@@ -37,7 +37,7 @@ def get_next_step(data, start):
         Find the next footstep
     """
     start = max(start+1, 3)
-    for i in range(start, len(data)-3):
+    for i in range(start, len(data)-8):
         grt = True
         for j in range(-3, 8):
             if data[i] < data[i+j]:

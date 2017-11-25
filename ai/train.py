@@ -10,11 +10,12 @@ def input_gen():
     """
         Infinite sample generator
     """
-    data = get_data()
-    data = [
-        (d[0].resize([STEPS, d[0].shape[1]]), d[1])
-        for d in data
-    ]
+    data_in = get_data()
+    data = []
+    for d in data_in:
+        d0 = d[0][:,1:]
+        d1 = d[1]
+        data.append((d0.resize([STEPS, d0.shape[1]-1])), d1)
     index = 0
     while True:
         index = (index +1)%len(data)
