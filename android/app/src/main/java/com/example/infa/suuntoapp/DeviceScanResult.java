@@ -3,11 +3,13 @@ package com.example.infa.suuntoapp;
 import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.scan.ScanResult;
 
+import java.io.Serializable;
+
 /**
  * Created by henriksoderberg on 25/11/2017.
  */
 
-public class DeviceScanResult {
+public class DeviceScanResult implements Serializable {
     public int rssi;
     public String macAddress;
     public String name;

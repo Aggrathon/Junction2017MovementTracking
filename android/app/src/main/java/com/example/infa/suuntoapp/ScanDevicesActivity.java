@@ -34,9 +34,8 @@ public class ScanDevicesActivity extends AppCompatActivity implements AdapterVie
 
     static private RxBleClient bleClient;
 
-    private Mds mds;
-    public static final String URI_CONNECTEDDEVICES = "suunto://MDS/ConnectedDevices";
-    public static final String URI_EVENTLISTENER = "suunto://MDS/EventListener";
+    public static DeviceScanResult device;
+    public static Mds mds;
     public static final String SCHEME_PREFIX = "suunto://";
 
     private ListView scanResultListView;
@@ -150,17 +149,18 @@ public class ScanDevicesActivity extends AppCompatActivity implements AdapterVie
         if (position < 0 || position >= scanResultList.size())
             return;
 
-        DeviceScanResult device = scanResultList.get(position);
+        device = scanResultList.get(position);
         if (!device.isConnected()) {
             // Stop scanning
             onScanStopClicked(null);
-
             // And connect to the device
             connectBLEDevice(device);
         }
         else {
             // Device is connected, trigger showing /Info
-            showDeviceInfo(device.connectedSerial);
+            //showDeviceInfo(device.connectedSerial);
+            Intent i = new Intent(getApplicationContext(), DataShowActivity.class);
+            startActivity(i);
         }
     }
 
