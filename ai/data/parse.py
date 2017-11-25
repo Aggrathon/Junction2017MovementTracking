@@ -1,7 +1,11 @@
+"""
+    Convert all raw logs to csvs
+"""
+import os
 
-def parse_json():
+def parse_json(filename):
     data = []
-    with open('data/data.json') as file:
+    with open(filename) as file:
         lines = file.readlines()
         for line in lines:
             start = line.find(':')+1
@@ -18,10 +22,11 @@ def parse_json():
             end = line.find('}', start)
             z = float(line[start:end].replace(',', ','))
             data.append((time, x, y, z))
-    with open('data/data.csv', "w") as file:
+    with open(filename[:filename.rfind('.')]+'.csv', "w") as file:
         file.write("time,x,y,z\n")
         for t, x, y, z in data:
             file.write('%f,%f,%f,%f\n'%(t,x,y,z)) 
 
 if __name__ == "__main__":
-    parse_json()
+    for file in os.listdir('data'):
+        parse_json('data/'+file)
