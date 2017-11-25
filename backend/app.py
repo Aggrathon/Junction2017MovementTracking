@@ -17,6 +17,8 @@ def start(command):
         with open('data.csv', 'w') as data_file:
             data_file.write(CAPTURE)
         CAPTURE = None
+    
+    return '', 200
 
 
 @app.route('/', methods=["POST"])
@@ -34,4 +36,4 @@ def index():
     return ','.join(csv_line) + '\n'
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', debug=True)
