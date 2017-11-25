@@ -7,3 +7,4 @@ backend/data/*.csv
 *.pyc
 ai/data/*
 !ai/data/*.py
+.DS_Store
