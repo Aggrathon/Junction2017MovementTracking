@@ -4,32 +4,14 @@ import dash_core_components as dcc
 import dash_html_components as html
 import datetime
 import plotly
+import json
+from flask import Flask, request
 
 import random
 import pandas as pd
 
+flask_app = Flask(__name__)
 
-class Dummy(object):
-    def __init__(self):
-        self.x = 0
-        self.y = 0
-        self.z = 0
-
-    def get_data(self):
-        self.x += random.normalvariate(0, 1)
-        self.y += random.normalvariate(0, 1)
-        self.z += random.normalvariate(0, 1)
-        return self.x, self.y, self.z
-
-class Stream(object):
-    def __init__(self):
-        self.df = pd.read_csv('data/angular_velocity.csv')
-        self.index = 0
-
-    def get_data(self):
-        x, y, z = self.df.iloc[self.index]
-        self.index += 1
-        return x, y, z 
 
 class LimitedQueue(list):
     def __init__(self, maxlen=100):
@@ -39,10 +21,7 @@ class LimitedQueue(list):
         self.extend(args)
         self.__delslice__(0, len(self) / self.maxlen)
 
-        
-dummy = Stream()
-
-MAX_LIMIT = 60
+MAX_LIMIT = 1000
 
 data = {
     'time': LimitedQueue(MAX_LIMIT),
@@ -50,6 +29,24 @@ data = {
     'y': LimitedQueue(MAX_LIMIT),
     'z': LimitedQueue(MAX_LIMIT)
 }
+
+@flask_app.route('/', methods=["POST"])
+def index():
+    # get and parse json data from request body
+    content = request.form
+    data = json.loads(content["data"])
+    time = datetime.datetime.now()
+    
+    if 'ArrayGyro' in data['Body']:
+        data_type = 'ArrayGyro'
+        coords = data['Body']['ArrayGyro'][0]
+
+        data['x'].append(float(coords['x']))
+        data['y'].append(float(coords['y']))
+        data['z'].append(float(coords['z']))
+        data['time'].append(time)
+
+    return 'OK', 201
 
 app = dash.Dash(__name__)
 app.layout = html.Div(
@@ -70,7 +67,7 @@ app.layout = html.Div(
 @app.callback(Output('live-update-text', 'children'),
               events=[Event('interval-component', 'interval')])
 def update_metrics():
-    x, y, z = dummy.get_data()
+    x, y, z = 0, 0, 0
     style = {'padding': '5px', 'fontSize': '16px'}
     return [
         html.Span('x: {0:.2f}'.format(x), style=style),
@@ -83,16 +80,6 @@ def update_metrics():
 @app.callback(Output('live-update-graph', 'figure'),
               events=[Event('interval-component', 'interval')])
 def update_graph_live():
-    # Collect some data
-
-    time = datetime.datetime.now()
-    x, y, z = dummy.get_data()
-
-    data['x'].append(x)
-    data['y'].append(y)
-    data['z'].append(z)
-    data['time'].append(time)
-
     # Create the graph with subplots
     fig = plotly.tools.make_subplots(rows=3, cols=1, vertical_spacing=0.2)
     fig['layout']['margin'] = {
@@ -127,4 +114,4 @@ def update_graph_live():
 
 if __name__ == '__main__':
     app.run_server(debug=True)
-
+    flask_app.run(host='0.0.0.0', debug=True)
