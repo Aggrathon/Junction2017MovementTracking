@@ -48,14 +48,14 @@ def model2_fn(features, labels, mode):
             train = tf.train.AdamOptimizer().minimize(loss, tf.train.get_global_step())
         return tf.estimator.EstimatorSpec(
                 mode=mode,
-                predictions={'output': tf.arg_max(tf.nn.softmax(output))},
+                predictions={'output': tf.nn.softmax(output)},
                 loss=loss,
                 train_op=train
         )
     else:
         return tf.estimator.EstimatorSpec(
             mode=mode,
-            predictions={'output': tf.arg_max(tf.nn.softmax(output))}
+            predictions={'output': tf.nn.softmax(output)}
         )
 
 def network():

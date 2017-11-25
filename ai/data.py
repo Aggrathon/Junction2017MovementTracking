@@ -5,12 +5,14 @@ import os
 import numpy as np
 from model import PREDS
 
-def get_data():
+def get_data(files=None):
     """
         Get data samples for training
     """
+    if files is None:
+        files = ['data/'+file for file in os.listdir('data')]
     data_all = []
-    for file in os.listdir('data'):
+    for file in files:
         if 'fix' not in file or 'csv' not in file:
             continue
         label = [0 for _ in range(PREDS)]
@@ -20,9 +22,7 @@ def get_data():
             label[2] = 1
         elif 'walk' in file:
             label[0] = 1
-        else:
-            continue
-        time, data = read_file('data/'+file)
+        time, data = read_file(file)
         smooth = data_smooth(data)
         start = get_next_step(smooth, 0)
         stop = get_next_step(smooth, start)
