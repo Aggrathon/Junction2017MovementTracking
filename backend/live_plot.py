@@ -6,6 +6,8 @@ import datetime
 import plotly
 import json
 from flask import Flask, request
+from threading import Thread
+
 
 flask_app = Flask(__name__)
 
@@ -113,6 +115,11 @@ def update_graph_live():
     return fig
 
 
-if __name__ == '__main__':
+def run_dashboard():
     app.run_server(host='0.0.0.0', debug=True)
+
+
+if __name__ == '__main__':
+    thread = Thread(None, run_dashboard)
+    thread.start()
     flask_app.run(host='0.0.0.0', debug=True)
