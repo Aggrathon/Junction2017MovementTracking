@@ -9,7 +9,7 @@ def get_data():
     """
         Get data samples for training
     """
-    data = [] 
+    data_all = []
     for file in os.listdir('data'):
         if 'fix' not in file or 'csv' not in file:
             continue
@@ -27,11 +27,10 @@ def get_data():
         start = get_next_step(smooth, 0)
         stop = get_next_step(smooth, start)
         while stop > 0:
-            data.append((data[start:stop], label))
+            data_all.append((data[start:stop], label))
             start = stop
             stop = get_next_step(smooth, start)
-    data = [(np.zeros([200, 12], np.float), np.zeros([PREDS], np.float)) for _ in range(100)] #TODO remove
-    return data
+    return data_all
 
 def get_next_step(data, start):
     """
