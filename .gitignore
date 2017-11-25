@@ -5,3 +5,4 @@ ai/network
 .sass-cache/
 backend/data/*.csv
 *.pyc
+.DS_Store
