@@ -5,8 +5,8 @@
 import tensorflow as tf
 
 BATCH = 32
-PREDS = 4
-STEPS = 100
+PREDS = 3
+STEPS = 20
 
 def model_fn(features, labels, mode):
     data = features['data']

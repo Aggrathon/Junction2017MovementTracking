@@ -1,6 +1,7 @@
 """
     Datamanagement
 """
+import os
 import numpy as np
 from model import PREDS
 
@@ -9,8 +10,18 @@ def get_data():
         Get data samples for training
     """
     data = [] 
-    for file in ["data/data.csv"]:
-        label = [0]
+    for file in os.listdir('data'):
+        if 'fix' not in file or 'csv' not in file:
+            continue
+        label = [0 for _ in range(PREDS)]
+        if 'left' in file:
+            label[1] = 1
+        elif 'right' in file:
+            label[2] = 1
+        elif 'walk' in file:
+            label[0] = 1
+        else:
+            continue
         time, data = read_file(file)
         smooth = data_smooth(data)
         start = get_next_step(smooth, 0)
@@ -42,21 +53,20 @@ def read_file(filename):
         Read a csv
     """
     time = []
-    x = []
-    y = []
-    z = []
+    data = []
     with open(filename) as file:
         file.readline()
         for l in file.readlines():
             split = l[:-1].split(',')
             time.append(float(split[0]))
-            x.append(float(split[1]))
-            y.append(float(split[2]))
-            z.append(float(split[3]))
-    return time, [x, y, z]
+            data.append(list(map(float, split[1:])))
+    return time, np.asarray(data)
 
 def data_abs(data):
-    return np.abs(data[0]) + np.abs(data[1]) + np.abs(data[2])
+    abs = np.abs(data[:, 0])
+    for i in range(1, data.shape[1]):
+        abs += np.abs(data[:, i])
+    return abs
 
 def data_smooth(data):
     abs = data_abs(data)

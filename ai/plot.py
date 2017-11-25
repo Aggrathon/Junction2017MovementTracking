@@ -4,9 +4,9 @@ import numpy as np
 from data import read_file, data_abs, data_smooth, get_next_step
 
 time, data = read_file('data/data.csv')
-x = data[0]
-y = data[1]
-z = data[2]
+x = data[:, 0]
+y = data[:, 1]
+z = data[:, 2]
 smooth = data_smooth(data)
 
 plt.plot(time, z, 'b')
