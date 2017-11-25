@@ -1,3 +1,4 @@
+package com.example.infa.suuntoapp;
 
 import android.Manifest;
 import android.app.Activity;
@@ -12,11 +13,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class StorageManager {
+public class FileLog {
 
 	public static final String DIRECTORY_NAME = "MoveSense";
 	public static String LOG_DIRECTORY = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + File.separator + DIRECTORY_NAME;
-
 
 	public static void createFolders(Activity activity) {
 		File logDir = new File(LOG_DIRECTORY);
@@ -32,7 +32,7 @@ public class StorageManager {
 		createFolders(activity);
 		BufferedWriter writer;
 		try {
-			writer = new BufferedWriter(new FileWriter(LOG_DIRECTORY + File.separator + fileName));
+			writer = new BufferedWriter(new FileWriter(LOG_DIRECTORY + File.separator + filename));
 			writer.write(logs);
 			writer.close();
 		}
