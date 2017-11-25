@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SuuntoApp</string>
+    <string name="title_activity_scan_devices">ScanDevicesActivity</string>
 </resources>
