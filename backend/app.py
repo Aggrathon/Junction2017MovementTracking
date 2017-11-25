@@ -25,15 +25,28 @@ def start(command):
 def index():
     global CAPTURE
 
+    # get and parse json data from request body
     content = request.form
     data = json.loads(content["data"])
+    
     timestamp = str(time.time())
-    coords = data['Body']['ArrayAcc'][0]
-    csv_line = [timestamp, coords['x'], coords['y'], coords['z']]
+    device_id = data['Uri']
+    
+    if 'ArrayAcc' in data['Body']:
+        data_type = 'ArrayAcc'
+        coords = data['Body']['ArrayAcc'][0]
+
+    if 'ArrayGyro' in data['Body']:
+        data_type = 'ArrayGyro'
+        coords = data['Body']['ArrayGyro'][0]
+    
+    csv_line = [timestamp, data_type, device_id,
+                coords['x'], coords['y'], coords['z']]
+    # save data line
     if CAPTURE:
         CAPTURE += ','.join(csv_line) + '\n'
 
-    return ','.join(csv_line) + '\n'
+    return 'OK', 201
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
