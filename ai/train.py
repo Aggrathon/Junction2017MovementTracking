@@ -24,6 +24,7 @@ def input_fn():
     """
         Estimator input function
     """
+    print("Setting up network")
     data = tf.data.Dataset.from_generator(input_gen, (tf.float32, tf.float32), (tf.TensorShape([STEPS, 12]), tf.TensorShape([PREDS])))
     batch = data.shuffle(buffer_size=800).batch(BATCH).make_one_shot_iterator().get_next()
     return {"data": batch[0]}, {"pred": batch[1]}
