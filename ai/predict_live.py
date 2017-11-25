@@ -3,7 +3,6 @@ from threading import Thread
 from model import network2
 from data import data_smooth, get_next_step
 from queue import Queue
-import predict
 import json
 import time
 from flask import Flask, request
@@ -87,4 +86,3 @@ def _predict(queue):
 if __name__ == "__main__":
     predict(QUEUE)
     app.run(host='0.0.0.0', debug=True)
-    
