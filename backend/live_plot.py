@@ -16,7 +16,7 @@ class LimitedQueue(list):
 
     def append(self, *args): 
         self.extend(args)
-        del self[0, len(self) // self.maxlen]
+        del self[0:len(self) // self.maxlen]
 
 MAX_LIMIT = 1000
 
