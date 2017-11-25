@@ -41,14 +41,14 @@ public class DataShowActivity extends AppCompatActivity {
         gyroSubscription = mds.subscribe(
                 URI_EVENTLISTENER,
                 gyroUri,
-                new GyroHandle()
+                new GyroHandle(this)
         );
 
 
         accSubscription = mds.subscribe(
                 URI_EVENTLISTENER,
                 accUri,
-                new LinearAccHandle()
+                new LinearAccHandle(this)
                 );
     }
 }
