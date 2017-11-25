@@ -12,7 +12,7 @@ def model_fn(features, labels, mode):
     data = features['data']
     dropout = 0.9 if tf.estimator.ModeKeys.TRAIN else 1.0
     lstm = tf.nn.rnn_cell.MultiRNNCell([
-        tf.nn.rnn_cell.DropoutWrapper(tf.nn.rnn_cell.LSTMCell(size), dropout, dropout)
+        tf.contrib.rnn.LayerNormBasicLSTMCell(size, dropout_keep_prob=dropout)
         for size in [30, 30 , 30, 30, 30]])
     state = lstm.zero_state(BATCH, tf.float32)
     for i in range(STEPS):
