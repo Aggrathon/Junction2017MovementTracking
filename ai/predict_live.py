@@ -52,6 +52,7 @@ def predict():
                         d = process(split[0], float(split[1]), float(split[2]), float(split[3]))
                         if d:
                             data.append(d)
+                            print("Added data")
             smooth = data_smooth(data)
             start = get_next_step(smooth, 0)
             stop = get_next_step(smooth, start)
