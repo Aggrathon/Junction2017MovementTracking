@@ -1,27 +1,107 @@
 import dash
 from dash.dependencies import Input, Output, Event
 import dash_core_components as dcc
+import plotly.graph_objs as go
 import dash_html_components as html
 import datetime
 import plotly
 import json
 import urllib.request
-
+import pandas as pd
 
 app = dash.Dash(__name__)
 
 
+straight_walk = pd.read_csv('data/axel_walk_fix.csv')[50:200]
+left_walk = pd.read_csv('data/axel_halt_fix.csv')[100:250]
+
 app.layout = html.Div(
     html.Div([
         html.H4('Movesense angluar velocity'),
+        dcc.Graph(
+            figure=go.Figure(
+                data=[
+                    go.Scatter(
+                        x=straight_walk.index,
+                        y=straight_walk.foot_1_gyro_z,
+                        name='left foot z-velocity',
+                        line = dict(
+                            color = ('rgb(205, 12, 24)'),
+                        )
+                    ),
+                    go.Scatter(
+                        x=straight_walk.index,
+                        y=straight_walk.foot_2_gyro_z,
+                        name='right foot z-velocity',
+                        line = dict(
+                            color = ('rgb(42, 85, 170)'),
+                        )
+                    ),
+                ],
+                layout=go.Layout(
+                    title='Straight walk',
+                    showlegend=True,
+                    legend=go.Legend(
+                        x=0,
+                        y=1.0
+                    ),
+                    margin=go.Margin(l=40, r=0, t=40, b=30)
+                )
+            ),
+            style={
+                'height': 250,
+            },
+            id='straight-walk-graph'
+        ),
+        dcc.Graph(
+            figure=go.Figure(
+                data=[
+                    go.Scatter(
+                        x=left_walk.index,
+                        y=left_walk.foot_1_gyro_z,
+                        name='left foot z-velocity',
+                        line = dict(
+                            color = ('rgb(205, 12, 24)'),
+                        )
+                    ),
+                    go.Scatter(
+                        x=left_walk.index,
+                        y=left_walk.foot_2_gyro_z,
+                        name='right foot z-velocity',
+                        line = dict(
+                            color = ('rgb(42, 85, 170)'),
+                        )
+                    ),
+                ],
+                layout=go.Layout(
+                    title='Limp walk',
+                    showlegend=True,
+                    legend=go.Legend(
+                        x=0,
+                        y=1.0
+                    ),
+                    margin=go.Margin(l=40, r=0, t=40, b=30)
+                )
+            ),
+            style={
+                'height': 250,
+            },
+            id='left-walk-graph'
+        ),
         html.Div(id='live-update-text'),
-        dcc.Graph(id='live-update-graph'),
+        dcc.Graph(
+            id='live-update-graph',
+            style={
+                'height': 250,
+            }
+        ),
         dcc.Interval(
             id='interval-component',
             interval=200 # in milliseconds
         )
     ])
 )
+app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
 
 # The `dcc.Interval` component emits an event called "interval"
 # every `interval` number of milliseconds.
@@ -52,34 +132,34 @@ def update_graph_live():
     encoding = webURL.info().get_content_charset('utf-8')
     data = json.loads(response_data.decode(encoding))
 
-    # Create the graph with subplots
-    fig = plotly.tools.make_subplots(rows=3, cols=1, vertical_spacing=0.2)
-    fig['layout']['margin'] = {
-        'l': 30, 'r': 10, 'b': 30, 't': 10
-    }
-    fig['layout']['legend'] = {'x': 0, 'y': 1, 'xanchor': 'left'}
-
-    fig.append_trace({
-        'x': data['time'],
-        'y': data['x'],
-        'name': 'x-velocity',
-        'mode': 'lines+markers',
-        'type': 'scatter'
-    }, 1, 1)
-    fig.append_trace({
-        'x': data['time'],
-        'y': data['y'],
-        'name': 'y-velocity',
-        'mode': 'lines+markers',
-        'type': 'scatter'
-    }, 2, 1)
-    fig.append_trace({
-        'x': data['time'],
-        'y': data['z'],
-        'name': 'z-velocity',
-        'mode': 'lines+markers',
-        'type': 'scatter'
-    }, 3, 1)
+    fig = go.Figure(
+                data=[
+                    go.Scatter(
+                        x=data['time'],
+                        y=data['x'],
+                        name='x-velocity',
+                    ),
+                    go.Scatter(
+                        x=data['time'],
+                        y=data['y'],
+                        name='y-velocity',
+                    ),
+                    go.Scatter(
+                        x=data['time'],
+                        y=data['z'],
+                        name='z-velocity',
+                    ),
+                ],
+                layout=go.Layout(
+                    title='',
+                    showlegend=True,
+                    legend=go.Legend(
+                        x=0,
+                        y=1.0
+                    ),
+                    margin=go.Margin(l=40, r=0, t=40, b=30)
+                )
+            )
 
     return fig
 
