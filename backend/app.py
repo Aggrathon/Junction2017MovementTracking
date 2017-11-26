@@ -22,7 +22,7 @@ def start(command):
         CAPTURE = None
     elif command == 'record':
         QUEUE = ""
-    elif command == 'get':
+    elif command == 'get' and QUEUE is not None:
         s = QUEUE
         QUEUE = ""
         return s, 200

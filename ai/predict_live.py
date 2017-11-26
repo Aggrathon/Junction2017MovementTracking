@@ -42,18 +42,21 @@ def predict():
         while True:
             while len(data) < 20:
                 sleep(0.5)
-                webURL = urllib.request.urlopen("http://0.0.0.0:5000/get")
-                response_data = webURL.read()
-                encoding = webURL.info().get_content_charset('utf-8')
-                data = response_data.decode(encoding)
-                for line in data.split('\n'):
-                    if line:
-                        split = line.split(',')
-                        d = process(split[0], float(split[1]), float(split[2]), float(split[3]))
-                        print("Added part")
-                        if d:
-                            data.append(d)
-                            print("Added data")
+                try:
+                    webURL = urllib.request.urlopen("http://0.0.0.0:5000/get")
+                    response_data = webURL.read()
+                    encoding = webURL.info().get_content_charset('utf-8')
+                    data = response_data.decode(encoding)
+                    for line in data.split('\n'):
+                        if line:
+                            split = line.split(',')
+                            d = process(split[0], float(split[1]), float(split[2]), float(split[3]))
+                            print("Added part")
+                            if d:
+                                data.append(d)
+                                print("Added data")
+                except:
+                    pass
             smooth = data_smooth(data)
             start = get_next_step(smooth, 0)
             stop = get_next_step(smooth, start)
