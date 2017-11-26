@@ -23,7 +23,7 @@ public class FileLog {
 		logDir.mkdirs();
 		if(logDir.isDirectory()) {
 		}
-		else {	
+		else {
 			Log.e("Storage", "Could not access storage to create directories");
 			Toast.makeText(activity, "Could not access storage to create directories", Toast.LENGTH_LONG).show();
 		}
