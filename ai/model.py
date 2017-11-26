@@ -4,7 +4,7 @@
 
 import tensorflow as tf
 
-BATCH = 32
+BATCH = 64
 PREDS = 7
 STEPS = 20
 
@@ -47,7 +47,9 @@ def model2_fn(features, labels, mode):
         with tf.variable_scope("loss"):
             loss = tf.losses.softmax_cross_entropy(labels['pred'][:,:-2], logits[:,:-2]) +\
                 tf.losses.softmax_cross_entropy(labels['pred'][:,-2:], logits[:,-2:])
-            train = tf.train.AdamOptimizer(0.0001).minimize(loss, tf.train.get_global_step())
+            step = tf.train.get_global_step()
+            lr = 0.0005*(1000/tf.minimum(step, 20000))
+            train = tf.train.AdamOptimizer(lr).minimize(loss, step)
         return tf.estimator.EstimatorSpec(
                 mode=mode,
                 predictions={'output': output},
