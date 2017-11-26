@@ -5,7 +5,7 @@ from tensorflow.python.tools.freeze_graph import freeze_graph
 from tensorflow.python.tools.optimize_for_inference_lib import optimize_for_inference
 from model import model2_fn as model_fn
 
-EXPORT_FOLDER = os.path.join('network2')
+EXPORT_FOLDER = os.path.join('export')
 INPUT_TENSOR_NAME = 'input'
 OUTPUT_TENSOR_NAME = 'output'
 EXPORTED_MODEL_NAME = os.path.join(EXPORT_FOLDER, 'model.pb')
@@ -15,7 +15,7 @@ def get_session():
     sess.run(tf.local_variables_initializer())
     sess.run(tf.global_variables_initializer())
     saver = tf.train.Saver()
-    ckpt = tf.train.get_checkpoint_state(EXPORT_FOLDER)
+    ckpt = tf.train.get_checkpoint_state('network2')
     saver.restore(sess, ckpt.model_checkpoint_path)
     return sess
 

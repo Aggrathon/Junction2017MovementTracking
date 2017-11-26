@@ -48,7 +48,7 @@ def model2_fn(features, labels, mode):
             loss = tf.losses.softmax_cross_entropy(labels['pred'][:,:-2], logits[:,:-2]) +\
                 tf.losses.softmax_cross_entropy(labels['pred'][:,-2:], logits[:,-2:])
             step = tf.train.get_global_step()
-            lr = 0.0005*(1000/tf.minimum(step, 20000))
+            lr = 0.0005*(1000/tf.minimum(step+1, 20000))
             train = tf.train.AdamOptimizer(lr).minimize(loss, step)
         return tf.estimator.EstimatorSpec(
                 mode=mode,
