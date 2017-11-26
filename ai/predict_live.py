@@ -11,7 +11,7 @@ import tensorflow as tf
 app = Flask(__name__)
 
 QUEUE = Queue()
-NAMES = ['174630000602/Meas/Acc/13', '174630000602/Meas/Gyro/13', '174630000495/Meas/Acc/13', '174630000495/Meas/Gyro/13'],
+NAMES = ['174630000602/Meas/Acc/13', '174630000602/Meas/Gyro/13', '174630000495/Meas/Acc/13', '174630000495/Meas/Gyro/13']
 POS = {n: i for i, n in enumerate(NAMES)}
 POST = [None for _ in NAMES]
 
@@ -55,20 +55,19 @@ def index():
     return 'OK', 201
 
 
-def predict(queue):
-    t = Thread(None, _predict, "ai", queue)
+def predict():
+    t = Thread(None, _predict, "ai")
     t.start()
-    t.join()
 
-def _predict(queue):
+def _predict():
     nn = network2()
     def gen():
-        global queue
+        global QUEUE
         data = []
         while True:
             while len(data) < 20:
-                data.append(queue.get())
-                queue.task_done()
+                data.append(QUEUE.get())
+                QUEUE.task_done()
             smooth = data_smooth(data)
             start = get_next_step(smooth, 0)
             stop = get_next_step(smooth, start)
@@ -84,5 +83,5 @@ def _predict(queue):
 
 
 if __name__ == "__main__":
-    predict(QUEUE)
+    predict()
     app.run(host='0.0.0.0', debug=True)
