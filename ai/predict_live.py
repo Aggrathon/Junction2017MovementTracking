@@ -42,7 +42,7 @@ def predict():
         while True:
             while len(data) < 20:
                 sleep(0.5)
-                webURL = urllib.request.urlopen("http://0.0.0.0:5000")
+                webURL = urllib.request.urlopen("http://0.0.0.0:5000/get")
                 response_data = webURL.read()
                 encoding = webURL.info().get_content_charset('utf-8')
                 data = response_data.decode(encoding)
@@ -68,5 +68,5 @@ def predict():
 
 
 if __name__ == "__main__":
+    urllib.request.urlopen("http://0.0.0.0:5000/record").read()
     predict()
-    app.run(host='0.0.0.0', debug=True)
