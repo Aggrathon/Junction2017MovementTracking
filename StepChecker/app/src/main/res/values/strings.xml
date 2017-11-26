@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Step Checker</string>
+    <string name="button_connect">Connect</string>
+    <string name="button_data">Saved Data</string>
+    <string name="button_scan">Scan for sensors</string>
+    <string name="button_stop_scanning">Stop scanning</string>
+</resources>
