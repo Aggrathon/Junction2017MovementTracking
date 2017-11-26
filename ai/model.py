@@ -42,7 +42,7 @@ def model2_fn(features, labels, mode):
         prev_layer = tf.layers.dense(prev_layer, i, activation=tf.nn.relu)
         prev_layer = tf.layers.dropout(prev_layer, dropout)
     logits = tf.layers.dense(prev_layer, PREDS, activation=None, name="logits")
-    output = tf.concat((tf.nn.softmax(logits[:,:-2]), tf.nn.softmax(logits[:,-2:])), 1) 
+    output = tf.concat((tf.nn.softmax(logits[:,:-2]), tf.nn.softmax(logits[:,-2:])), 1, name='output') 
     if mode != tf.estimator.ModeKeys.PREDICT:
         with tf.variable_scope("loss"):
             loss = tf.losses.softmax_cross_entropy(labels['pred'][:,:-2], logits[:,:-2]) +\
