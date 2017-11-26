@@ -2,21 +2,30 @@
 import json
 import time
 from flask import Flask, request
+from queue import Queue
 
 app = Flask(__name__)
 
 CAPTURE = None
+QUEUE = None
 
 
 @app.route('/<command>')
 def start(command):
     global CAPTURE
+    global QUEUE
     if command == 'start':
         CAPTURE = ''
-    if command == 'stop':
+    elif command == 'stop':
         with open('data.csv', 'w') as data_file:
             data_file.write(CAPTURE)
         CAPTURE = None
+    elif command == 'record':
+        QUEUE = ""
+    elif command == 'get' and QUEUE is not None:
+        s = QUEUE
+        QUEUE = ""
+        return s, 200
     
     return '', 200
 
@@ -24,6 +33,7 @@ def start(command):
 @app.route('/', methods=["POST"])
 def index():
     global CAPTURE
+    global QUEUE
 
     # get and parse json data from request body
     content = request.form
@@ -43,8 +53,10 @@ def index():
     csv_line = [timestamp, data_type, device_id,
                 coords['x'], coords['y'], coords['z']]
     # save data line
-    if CAPTURE:
+    if CAPTURE is not None:
         CAPTURE += ','.join(csv_line) + '\n'
+    if QUEUE is not None:
+        QUEUE += "%s,%s,%s,%s\n"%(device_id, coords['x'], coords['y'], coords['z'])
 
     return 'OK', 201
 

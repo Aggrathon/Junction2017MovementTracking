@@ -14,11 +14,12 @@ def input_gen():
     data_in = get_data()
     data = []
     for d in data_in:
-        d0 = np.zeros((STEPS, 12), np.float)
-        length = min(STEPS, d[0].shape[0])
-        d0[:length,:] = d[0][:length,:]
-        d1 = d[1]
-        data.append((d0, d1))
+        for i in range(3):
+            d0 = np.zeros((STEPS, 12), np.float)
+            length = min(STEPS, d[0].shape[0]-2)
+            d0[:length,:] = d[0][i:length+i,:]
+            d1 = d[1]
+            data.append((d0, d1))
     index = 0
     while True:
         index = (index +1)%len(data)
