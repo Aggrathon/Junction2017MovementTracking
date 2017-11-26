@@ -15,19 +15,35 @@ def get_data(files=None):
     for file in files:
         if 'fix' not in file or 'csv' not in file:
             continue
-        label = [0 for _ in range(PREDS)]
+        label = [0.0 for _ in range(PREDS)]
+        label[5] = 1.0
         if 'left' in file:
-            label[1] = 1
+            label[1] = 1.0
         elif 'right' in file:
-            label[2] = 1
+            label[2] = 1.0
         elif 'walk' in file:
-            label[0] = 1
+            label[0] = 1.0
+        elif 'stair' in file:
+            if 'down' in file:
+                label[4] = 1.0
+            else:
+                label[3] = 1.0
+        elif 'halt' in file:
+            label[0] = 1.0
+        if 'jonas' in file:
+            label[6] = 0.3
+            label[5] = 0.7
+        if '2b' in file or 'halt' in file:
+            label[6] = 1.0
+            label[5] = 0.0
         time, data = read_file(file)
+        if len(time) < 10:
+            continue
         smooth = data_smooth(data)
         start = get_next_step(smooth, 0)
         stop = get_next_step(smooth, start)
-        while stop > 0:
-            data_all.append((data[start:stop], label))
+        while start > 0 and stop > 0:
+            data_all.append((data[start-1:stop+1], label))
             start = stop
             stop = get_next_step(smooth, start)
     return data_all
@@ -36,8 +52,8 @@ def get_next_step(data, start):
     """
         Find the next footstep
     """
-    start = max(start+1, 3)
-    for i in range(start, len(data)-8):
+    start = max(start+2, 3)
+    for i in range(start, len(data)-9):
         grt = True
         for j in range(-3, 8):
             if data[i] < data[i+j]:
@@ -64,7 +80,7 @@ def read_file(filename):
 
 def data_abs(data):
     abs = np.abs(data[:, 0])
-    for i in range(1, data.shape[1]):
+    for i in range(0, min(4, data.shape[1])):
         abs += np.abs(data[:, i])
     return abs
 
