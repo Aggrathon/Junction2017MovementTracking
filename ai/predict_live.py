@@ -50,6 +50,7 @@ def predict():
                     if line:
                         split = line.split(',')
                         d = process(split[0], float(split[1]), float(split[2]), float(split[3]))
+                        print("Added part")
                         if d:
                             data.append(d)
                             print("Added data")
