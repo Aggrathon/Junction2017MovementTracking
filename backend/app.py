@@ -7,22 +7,6 @@ app = Flask(__name__)
 
 CAPTURE = None
 
-
-@app.route('/<command>')
-def start(command):
-    global CAPTURE
-    if command == 'start':
-        CAPTURE = ''
-    if command == 'stop':#pylint: disable=C0111,W0603,C0103
-import json
-import time
-from flask import Flask, request
-
-app = Flask(__name__)
-
-CAPTURE = None
-
-
 @app.route('/<command>')
 def start(command):
     global CAPTURE
