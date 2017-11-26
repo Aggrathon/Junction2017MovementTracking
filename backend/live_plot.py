@@ -5,51 +5,12 @@ import dash_html_components as html
 import datetime
 import plotly
 import json
-from flask import Flask, request
+import urllib.request
 
-flask_app = Flask(__name__)
-
-
-class LimitedQueue(list):
-    def __init__(self, maxlen=100):
-        self.maxlen = maxlen + 1
-
-    def append(self, *args): 
-        self.extend(args)
-        del self[0:len(self) // self.maxlen]
-
-MAX_LIMIT = 1000
-
-data = {
-    'time': LimitedQueue(MAX_LIMIT),
-    'x': LimitedQueue(MAX_LIMIT),
-    'y': LimitedQueue(MAX_LIMIT),
-    'z': LimitedQueue(MAX_LIMIT)
-}
-
-data['x'].append(1)
-data['y'].append(1) 
-data['z'].append(1)
-
-@flask_app.route('/', methods=["POST"])
-def index():
-    # get and parse json data from request body
-    content = request.form
-    json_data = json.loads(content["test"])
-    time = datetime.datetime.now()
-    
-    if 'ArrayGyro' in json_data['Body']:
-        data_type = 'ArrayGyro'
-        coords = json_data['Body']['ArrayGyro'][0]
-
-        data['x'].append(float(coords['x']))
-        data['y'].append(float(coords['y']))
-        data['z'].append(float(coords['z']))
-        data['time'].append(time)
-
-    return 'OK', 201
 
 app = dash.Dash(__name__)
+
+
 app.layout = html.Div(
     html.Div([
         html.H4('Movesense angluar velocity'),
@@ -68,6 +29,11 @@ app.layout = html.Div(
 @app.callback(Output('live-update-text', 'children'),
               events=[Event('interval-component', 'interval')])
 def update_metrics():
+    webURL = urllib.request.urlopen("http://0.0.0.0:5000")
+    response_data = webURL.read()
+    encoding = webURL.info().get_content_charset('utf-8')
+    data = json.loads(response_data.decode(encoding))
+
     x, y, z = data['x'][-1], data['y'][-1], data['z'][-1]
     style = {'padding': '5px', 'fontSize': '16px'}
     return [
@@ -81,6 +47,11 @@ def update_metrics():
 @app.callback(Output('live-update-graph', 'figure'),
               events=[Event('interval-component', 'interval')])
 def update_graph_live():
+    webURL = urllib.request.urlopen("http://0.0.0.0:5000")
+    response_data = webURL.read()
+    encoding = webURL.info().get_content_charset('utf-8')
+    data = json.loads(response_data.decode(encoding))
+
     # Create the graph with subplots
     fig = plotly.tools.make_subplots(rows=3, cols=1, vertical_spacing=0.2)
     fig['layout']['margin'] = {
@@ -115,4 +86,3 @@ def update_graph_live():
 
 if __name__ == '__main__':
     app.run_server(host='0.0.0.0', debug=True)
-    flask_app.run(host='0.0.0.0', debug=True)
