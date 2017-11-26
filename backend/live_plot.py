@@ -89,16 +89,29 @@ app.layout = html.Div(
             id='left-walk-graph'
         ),
         html.Div(id='live-update-text'),
-        dcc.Graph(
-            id='live-update-graph',
-            style={
-                'height': 250,
-            }
-        ),
-        dcc.Interval(
-            id='interval-component',
-            interval=200 # in milliseconds
-        )
+        html.Div(
+            children=[
+                html.Div(
+                    children=[
+                        dcc.Graph(
+                                id='live-update-graph',
+                                style={
+                                    'height': 250,
+                                }
+                            ),
+                        dcc.Interval(
+                            id='interval-component',
+                            interval=200 # in milliseconds
+                        )
+                    ],
+                ),
+                html.Div(
+                    children=[
+                        html.H4('PLACEHOLDER'),
+                        html.H4('Predictions')
+                    ],
+                ),     
+            ])
     ])
 )
 app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
