@@ -31,8 +31,11 @@ def get_data(files=None):
         elif 'halt' in file:
             label[0] = 1.0
         if 'jonas' in file:
-            label[6] = 0.3
-            label[5] = 0.7
+            label[6] = 0.4
+            label[5] = 0.6
+        elif 'anton' in file:
+            label[6] = 0.1
+            label[5] = 0.9
         if '2b' in file or 'halt' in file:
             label[6] = 1.0
             label[5] = 0.0
