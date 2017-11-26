@@ -1,8 +1,12 @@
 __pycache__
 .env
 ai/network
+ai/network2
+ai/export/*
 .vscode
 .sass-cache/
 backend/data/*.csv
 *.pyc
+ai/data/*
+!ai/data/*.py
 .DS_Store
