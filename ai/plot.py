@@ -9,12 +9,13 @@ y = data[:, 1]
 z = data[:, 2]
 smooth = data_smooth(data)
 
-plt.plot(time, z, 'b')
-plt.plot(time, y, 'g')
-plt.plot(time, x, 'r')
-plt.plot(time, data_abs(data), 'purple')
-plt.plot(time, smooth/12+10, 'black')
+plt.plot(time, z, 'b', label='z-acc')
+plt.plot(time, y, 'g', label='y-acc')
+plt.plot(time, x, 'r', label='x-acc')
+plt.plot(time, data_abs(data), 'purple', label='abs-sum')
+plt.plot(time, smooth/12+10, 'black', label='smooth')
 
+plt.legend()
 plt.show()
 
 def plot_step_lengths(smooth, time):
